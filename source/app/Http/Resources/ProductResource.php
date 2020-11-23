@@ -11,15 +11,23 @@ class ProductResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return array
      */
     public function toArray($request)
     {
-        $productEntity= (new ProductEntity())->setModel($this->resource);
-        return [
-          'name'=>$this->name,
-          'price'=>CurrencyConverter::convert($productEntity,request()->header('x-currency'))->getConvertedAmount()
-        ];
+        $productEntity = (new ProductEntity())
+            ->setModel($this->resource)
+            ->checkForOffers($this->resource);
+        CurrencyConverter::convert($productEntity, request()->header('x-currency'));
+
+        return array_merge(
+            [
+                'name' => $this->name,
+                'price' => $productEntity->getConvertedAmount(),
+                'discount' => $productEntity->getDiscount() ? $productEntity->getDiscount() . '%' : 0 . '%',
+                'price_after_discount' => $productEntity->getConvertedAmount() - ($productEntity->getConvertedAmount() * $productEntity->getDiscount() / 100),
+            ],
+            isset($this->pivot) ? ['amount' => $this->pivot->amount] : []);
     }
 }

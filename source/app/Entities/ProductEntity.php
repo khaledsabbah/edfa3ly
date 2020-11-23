@@ -6,18 +6,38 @@ namespace App\Entities;
 
 use App\Contracts\IEntity;
 use App\Contracts\IHoldCurrency;
+use App\Contracts\IOffer;
+use App\Models\Offer;
 use Illuminate\Database\Eloquent\Model;
 
-class ProductEntity implements IHoldCurrency, IEntity
+class ProductEntity implements IHoldCurrency, IEntity, IOffer
 {
     private $baseAmount;
     private $convertedAmount;
+    private $discount;
+    private $model;
 
     public function setModel(Model $model)
     {
         $this->setBaseAmount($model->price);
         $this->setConvertedAmount($model->price);
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getModel():Model
+    {
+        return $this->model;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDiscount()
+    {
+        return $this->discount;
     }
 
     public function getBaseAmount()
@@ -40,5 +60,14 @@ class ProductEntity implements IHoldCurrency, IEntity
     public function getConvertedAmount()
     {
         return $this->convertedAmount;
+    }
+
+    public function checkForOffers(Model $model)
+    {
+        $offer= $model->selfOffer;
+        if ($offer){
+            $this->discount= $offer->discount;
+        }
+        return $this;
     }
 }
