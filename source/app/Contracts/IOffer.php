@@ -9,5 +9,5 @@ use Illuminate\Database\Eloquent\Model;
 interface IOffer
 {
 
-    public function checkForOffers();
+    public function applyAnOffer(int $discount);
 }

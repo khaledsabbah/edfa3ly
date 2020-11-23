@@ -30,7 +30,7 @@ class CartRepository extends AbstractRepository
     /**
      * @return mixed
      */
-    public function getCartProducts()
+    public function getCart()
     {
         return $this->getUser()->cart;
     }

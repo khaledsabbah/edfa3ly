@@ -19,6 +19,7 @@ class ProductEntity implements IHoldCurrency, IEntity, IOffer
 
     public function __construct(Model $model)
     {
+        $this->discount=0;
         $this->setModel($model)
             ->checkForOffers();
     }
@@ -77,4 +78,12 @@ class ProductEntity implements IHoldCurrency, IEntity, IOffer
         }
         return $this;
     }
+
+    public function applyAnOffer(int $discount)
+    {
+        $this->discount +=$discount;
+        return $this;
+    }
+
+
 }
