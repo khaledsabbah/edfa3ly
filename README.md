@@ -28,6 +28,11 @@
 - Import Edfa3ly PostMan collection in task project named as " Edfa3ly.postman_collection.json "  
 *        Base Url :   http://localhost:9099
 
+
+# Test Cases: 
+<small>Not Completed due to short amount of time for the task</small>
+- Run   `make test` 
+
 ## Code Desgin and Architect
 I tried to apply S.O.L.I.D principles & use some design pattern and Hydrate everything into object as possible.
 
