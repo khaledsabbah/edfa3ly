@@ -25,7 +25,8 @@
         docker exec -it phpfpm /bin/bash
         
 # Running
-- Import Edfa3ly PostMan collection in task project named as " Edfa3ly.postman_collection.json "  
+- Import Edfa3ly PostMan collection in task project named as " Edfa3ly.postman_collection.json " to see the following image  
+![alt text](https://raw.githubusercontent.com/khaledsabbah/edfa3ly/main/images/postman.png)
 *        Base Url :   http://localhost:9099
 
 
