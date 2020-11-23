@@ -8,26 +8,28 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class ProductResource extends JsonResource
 {
+
     /**
-     * Transform the resource into an array.
-     *
      * @param \Illuminate\Http\Request $request
      * @return array
      */
     public function toArray($request)
     {
-        $productEntity = (new ProductEntity())
-            ->setModel($this->resource)
-            ->checkForOffers($this->resource);
-        CurrencyConverter::convert($productEntity, request()->header('x-currency'));
-
-        return array_merge(
-            [
-                'name' => $this->name,
-                'price' => $productEntity->getConvertedAmount(),
-                'discount' => $productEntity->getDiscount() ? $productEntity->getDiscount() . '%' : 0 . '%',
-                'price_after_discount' => $productEntity->getConvertedAmount() - ($productEntity->getConvertedAmount() * $productEntity->getDiscount() / 100),
-            ],
-            isset($this->pivot) ? ['amount' => $this->pivot->amount] : []);
+        $model = $this->getModel();
+        $price = $this->getConvertedAmount();
+        $result = [
+            'name' => $model->name,
+            'price' => $price,
+            'discount' => $this->getDiscount() ? $this->getDiscount() . '%' : 0 . '%',
+            'price_after_discount' => $price - ($price * $this->getDiscount() / 100),
+        ];
+        $arr = [];
+        if (isset($model->pivot)) {
+            $totalPrice = $price * $model->pivot->amount;
+            $arr = ['amount' => $model->pivot->amount];
+            $arr['total_price'] = $totalPrice;
+            $result['price_after_discount'] = $totalPrice - ($totalPrice * $this->getDiscount() / 100);
+        }
+        return array_merge($result,isset($model->pivot) ? $arr : []);
     }
 }

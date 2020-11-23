@@ -17,8 +17,15 @@ class ProductEntity implements IHoldCurrency, IEntity, IOffer
     private $discount;
     private $model;
 
+    public function __construct(Model $model)
+    {
+        $this->setModel($model)
+            ->checkForOffers();
+    }
+
     public function setModel(Model $model)
     {
+        $this->model= $model;
         $this->setBaseAmount($model->price);
         $this->setConvertedAmount($model->price);
         return $this;
@@ -62,9 +69,9 @@ class ProductEntity implements IHoldCurrency, IEntity, IOffer
         return $this->convertedAmount;
     }
 
-    public function checkForOffers(Model $model)
+    public function checkForOffers()
     {
-        $offer= $model->selfOffer;
+        $offer= $this->getModel()->selfOffer;
         if ($offer){
             $this->discount= $offer->discount;
         }

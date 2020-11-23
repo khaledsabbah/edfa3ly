@@ -4,6 +4,8 @@
 namespace App\Services;
 
 
+use App\Entities\ProductEntity;
+use App\Libs\CurrencyConverter;
 use App\Repositories\ProductRepository;
 
 class ProductService
@@ -17,6 +19,11 @@ class ProductService
 
     public function listAllProducts($paginate = true)
     {
-        return $this->repository->list($paginate);
+        $products= $this->repository->list($paginate);
+        $result=collect();
+        foreach ($products as $product){
+            $result->push(CurrencyConverter::convert(new ProductEntity($product), request()->header('x-currency')));
+        }
+        return $result;
     }
 }

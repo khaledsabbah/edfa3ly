@@ -4,6 +4,8 @@
 namespace App\Services;
 
 
+use App\Entities\ProductEntity;
+use App\Libs\CurrencyConverter;
 use App\Repositories\CartRepository;
 
 class CartService
@@ -28,7 +30,12 @@ class CartService
 
     public function getCart()
     {
-        return $this->repository->getCartProducts();
+        $cartProducts= $this->repository->getCartProducts();
+        $result=collect();
+        foreach ($cartProducts as $product){
+            $result->push(CurrencyConverter::convert(new ProductEntity($product), request()->header('x-currency')));
+        }
+        return $result;
 
     }
 }

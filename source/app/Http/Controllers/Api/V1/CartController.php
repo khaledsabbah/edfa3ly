@@ -20,12 +20,14 @@ class CartController extends ApiController
     public function addToCart(AddToCartRequest $request)
     {
         $this->service->addProductToCart($request->validated());
+        return $this->respondCreated();
     }
 
     public function removeFromCart(Request $request)
     {
         $data= $request->validate(['product_id'=>'required|numeric']);
         $this->service->removeProductFromCart($data);
+        return $this->respondDeleted();
     }
 
     public function index(Request $request)
