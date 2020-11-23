@@ -19,8 +19,8 @@ class ProductResource extends JsonResource
         $price = $this->getConvertedAmount();
         $result = [
             'name' => $model->name,
-            'price' => $price,
-            'discount' => $this->getDiscount() ? $this->getDiscount() . '%' : 0 . '%',
+            'price' => $price.' '.request()->header('x-currency'),
+            'discount' => $this->getDiscount() ? $this->getDiscount() . '% ('.($price * $this->getDiscount() / 100).' )' : 0,
             'price_after_discount' => $price - ($price * $this->getDiscount() / 100),
         ];
         $arr = [];
