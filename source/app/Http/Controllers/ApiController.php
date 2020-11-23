@@ -11,17 +11,20 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
 
-class ApiController extends Controller {
+class ApiController extends Controller
+{
 
     protected $statusCode = 200;
+
     /**
      * This Function for getting the status code
      * @return int $this->statusCode
      */
-    public function getStatusCode()
+    public function getStatusCode(): int
     {
         return $this->statusCode;
     }
+
     /**
      * This Function for setting the status code
      * @param int $statusCode
@@ -33,30 +36,34 @@ class ApiController extends Controller {
 
         return $this;
     }
+
     /**
      * This Function for setting the status code to 404
      * @return JsonResponse
      */
-    public function respondNotFound()
+    public function respondNotFound(): JsonResponse
     {
         return $this->setStatusCode(404)->respond([]);
     }
+
     /**
      * This Function for setting the status code to 401
      * @return JsonResponse
      */
-    public function respondUnAuthorized()
+    public function respondUnAuthorized($message=null): JsonResponse
     {
-        return $this->setStatusCode(401)->respond([]);
+        return $this->setStatusCode(401)->respond(!$message?[]:['message'=>$message]);
     }
+
     /**
      * This Function for setting the status code to 500
      * @return JsonResponse
      */
-    public function respondInternalError()
+    public function respondInternalError($message=null): JsonResponse
     {
-        return $this->setStatusCode(500)->respond([]);
+        return $this->setStatusCode(500)->respond(!$message?[]:['message'=>$message]);
     }
+
     /**
      * This Function for getting a JSON encoded response
      * "?" means nullable
@@ -64,17 +71,28 @@ class ApiController extends Controller {
      * @param  nullable array $headers
      * @return \Illuminate\Http\JsonResponse
      */
-    public function respond(?array $data=[], ?array $headers = [])
+    public function respond($data=[], ?array $headers = []): JsonResponse
     {
-        return Response()->json($data, $this->getStatusCode(), $headers);
+        return Response()->json(['data'=>$data], $this->getStatusCode(), $headers);
     }
+
     /**
      * This Function for setting the status code to 201
      * @return JsonResponse
      */
-    public function respondCreated()
+    public function respondCreated(): JsonResponse
     {
         return $this->setStatusCode(201)->respond([]);
+    }
+
+
+    /**
+     * This Function for setting the status code to 201
+     * @return JsonResponse
+     */
+    public function respondDeleted(): JsonResponse
+    {
+        return $this->setStatusCode(201)->respond('Resource successfully deleted!');
     }
 
     /**
@@ -82,7 +100,7 @@ class ApiController extends Controller {
      * @param $errors
      * @return JsonResponse
      */
-    public function respondValidationErrors($errors)
+    public function respondValidationErrors($errors): JsonResponse
     {
         if (is_array($errors)) {
             return $this->setStatusCode(422)->respond($errors);
